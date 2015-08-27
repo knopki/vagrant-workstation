@@ -1,0 +1,5 @@
+.vagrant
+.stversions
+.stfolder
+.stignore*
+provision/vagrant_ansible_inventory_default
