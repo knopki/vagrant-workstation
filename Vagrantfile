@@ -14,6 +14,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     v.customize ["modifyvm", :id, "--cpuexecutioncap", "90"]
     v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
   end
+  
+  # Node.js debug port
+  config.vm.network "forwarded_port", guest: 5858, host: 5858
 
   config.vm.synced_folder "~",              "/vagrant/home"
 
