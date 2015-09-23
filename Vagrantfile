@@ -15,23 +15,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
   end
   
-  # Node.js debug port
-  config.vm.network "forwarded_port", guest: 5858, host: 5858
-
   config.vm.synced_folder "~",              "/vagrant/home"
 
   config.ssh.forward_agent = true
 
-  if Vagrant::Util::Platform.windows?
-    # Provisioning configuration for shell script.
-    config.vm.provision "shell" do |sh|
-      sh.path = "provision/windows.sh"
-      sh.args = "provision/playbook.yml"
-    end
-  else
-    # Provisioning configuration for Ansible (for Mac/Linux hosts).
-    config.vm.provision "ansible" do |ansible|
-      ansible.playbook = "provision/playbook.yml"
-    end
+  # Salt Provisioner
+  config.vm.provision :salt do |salt|
+    salt.install_type = "stable"
+    salt.bootstrap_options = '-F -c /tmp/ -P'  
+    salt.masterless = true
+    salt.minion_config = "salt/minion"
+    salt.run_highstate = true
+    salt.verbose = true
+    salt.masterless = true
+    salt.colorize = true
   end
 end
